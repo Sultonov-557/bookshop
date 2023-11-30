@@ -25,25 +25,39 @@ export class UserService {
     return { success: true };
   }
 
-  findAll() {
-    return `This action returns all user`;
+  findAll(page: number, limit: number) {
+    const offset = (page - 1) * limit;
+
+    return this.userRepo.find({
+      skip: offset,
+      take: limit,
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(ID: number) {
+    return await this.userRepo.findOneBy({ ID });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(ID: number, updateUserDto: UpdateUserDto) {
+    const { telegramID, username } = updateUserDto;
+
+    const user = await this.userRepo.findOneBy({ ID });
+
+    user.username = username;
+    user.telegramID = telegramID;
+
+    await this.userRepo.save(user);
+    return { success: true };
   }
 
   async remove(ID: number) {
-    const userExist = await this.userRepo.exist({ where: { ID } });
+    const user = await this.userRepo.findOneBy({ ID });
 
-    if(!userExist){
-      throw new BadRequestException("user not found")
+    if (!user) {
+      throw new BadRequestException('user not found');
     }
 
-    
+    await this.userRepo.remove(user);
+    return { success: true };
   }
 }
