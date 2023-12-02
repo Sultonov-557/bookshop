@@ -22,7 +22,7 @@ export class BookController {
   }
 
   @Get()
-  findAll(@Query('page') page: number, @Query('limit') limit: number) {
+  findAll(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
     return this.bookService.findAll(page, limit);
   }
 

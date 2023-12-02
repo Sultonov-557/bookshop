@@ -14,6 +14,9 @@ export class Book extends RootEntity {
   @Column()
   author: string;
 
+  @Column()
+  price: number;
+
   @ManyToMany(() => Category, (category) => category.books)
   categorys: Category[];
 }
