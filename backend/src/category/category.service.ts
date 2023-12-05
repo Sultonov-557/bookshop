@@ -23,11 +23,15 @@ export class CategoryService {
     return this.categoryRepo.find({
       skip: offset,
       take: limit,
+      relations: ['books'],
     });
   }
 
   async findOne(ID: number) {
-    return await this.categoryRepo.findOneBy({ ID });
+    return await this.categoryRepo.findOne({
+      where: { ID },
+      relations: ['books'],
+    });
   }
 
   async update(ID: number, updateCategoryDto: UpdateCategoryDto) {

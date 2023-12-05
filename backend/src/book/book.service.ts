@@ -4,13 +4,39 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './entities/book.entity';
 import { Repository } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class BookService {
-  constructor(@InjectRepository(Book) private bookRepo: Repository<Book>) {}
+  constructor(
+    @InjectRepository(Book) private bookRepo: Repository<Book>,
+    @InjectRepository(Category) private categoryRepo: Repository<Category>,
+  ) {}
 
   async create(createBookDto: CreateBookDto) {
-    await this.bookRepo.create(createBookDto);
+    const {
+      author,
+      category: categoryName,
+      filePath,
+      name,
+      price,
+    } = createBookDto;
+
+    let category = await this.categoryRepo.findOneBy({ name: categoryName });
+    if (!category) {
+      category = await this.categoryRepo.create({ name: categoryName });
+      await this.categoryRepo.save(category);
+    }
+
+    const book = await this.bookRepo.create({
+      author,
+      categorys: [category],
+      filePath,
+      name,
+      price,
+    });
+
+    this.bookRepo.save(book);
 
     return { success: true };
   }
