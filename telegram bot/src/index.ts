@@ -6,6 +6,9 @@ import { bookHandler } from "./handlers/book.handler";
 import { NewContext } from "./common/types/NewContext";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import { NewBook } from "./conversations/newBook.conversation";
+import { saveHandler } from "./handlers/save.handler";
+import { authHandler } from "./handlers/auth.handler";
+import { ErrorHandler } from "./handlers/error.handler";
 
 const bot = new Bot<NewContext>(env.TOKEN);
 
@@ -31,3 +34,7 @@ bot.use(createConversation(NewBook, "newBook"));
 bot.use(commonHandler);
 bot.use(categoryHandler);
 bot.use(bookHandler);
+bot.use(saveHandler);
+bot.use(authHandler);
+
+bot.catch(ErrorHandler);

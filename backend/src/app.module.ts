@@ -7,9 +7,10 @@ import { UserModule } from './user/user.module';
 import { BookModule } from './book/book.module';
 import { CategoryModule } from './category/category.module';
 import { SavedModule } from './saved/saved.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(DBConfig), UserModule, BookModule, CategoryModule, SavedModule],
+  imports: [TypeOrmModule.forRoot(DBConfig), UserModule, BookModule, CategoryModule, SavedModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

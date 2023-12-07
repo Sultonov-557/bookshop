@@ -24,6 +24,7 @@ export class SavedService {
     if (!user || !book) {
       throw new BadRequestException('book or user not found');
     }
+    
 
     const save = this.saveRepo.create({ book, user });
     await this.saveRepo.save(save);

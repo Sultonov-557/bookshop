@@ -8,4 +8,7 @@ export class User extends RootEntity {
 
   @Column()
   telegramID: string;
+
+  @Column()
+  password: string;
 }

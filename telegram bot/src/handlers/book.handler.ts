@@ -45,8 +45,12 @@ bookHandler.callbackQuery(/^books_/, async (ctx) => {
 bookHandler.callbackQuery(/^book_/, async (ctx) => {
   const ID = +ctx.callbackQuery.data.replace("book_", "");
   const book = (await axios.get(`http://localhost:80/book/${ID}`)).data;
+  const keyboard = new InlineKeyboard();
 
-  ctx.reply(
-    `nomi: ${book.name}\nyozuvchi: ${book.author}\nnarxi: ${book.price}`
+  keyboard.text("save", `save_${ID}`);
+
+  ctx.editMessageText(
+    `nomi: ${book.name}\nyozuvchi: ${book.author}\nnarxi: ${book.price}`,
+    { reply_markup: keyboard }
   );
 });
