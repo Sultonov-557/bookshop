@@ -32,11 +32,9 @@ export class AuthService {
   async register(body: RegisterAuthDto) {
     const { username, password, telegramID } = body;
 
-    console.log(body);
     const userExists: boolean = await this.userRepo.exist({
       where: { username, telegramID },
     });
-    console.log(userExists);
 
     if (userExists) {
       throw new NotFoundException('username already taken');

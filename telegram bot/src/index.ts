@@ -31,10 +31,10 @@ bot.start({
 
 bot.use(createConversation(NewBook, "newBook"));
 
+bot.use(authHandler);
 bot.use(commonHandler);
 bot.use(categoryHandler);
 bot.use(bookHandler);
 bot.use(saveHandler);
-bot.use(authHandler);
 
 bot.catch(ErrorHandler);

@@ -22,9 +22,16 @@ export class SavedService {
     const user = await this.userRepo.findOneBy({ ID: userID });
 
     if (!user || !book) {
-      throw new BadRequestException('book or user not found');
+      return { success: false  };
     }
-    
+
+    const saveExist = await this.saveRepo.exist({
+      where: { book, user },
+    });
+
+    if (saveExist) {
+      return { success: false };
+    }
 
     const save = this.saveRepo.create({ book, user });
     await this.saveRepo.save(save);

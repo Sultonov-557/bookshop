@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "npx tsc --watch & node --watch dist/index.js"
+    "dev": "npx tsc --watch | node --watch dist/index.js"
   },
   "author": "",
   "license": "ISC",

@@ -1,28 +1,16 @@
 import axios from "axios";
-import { Composer } from "grammy";
+import { Composer, InlineKeyboard } from "grammy";
+import { AuthGuard } from "../guards/auth.guard";
+import { NewContext } from "../common/types/NewContext";
+import { SaveService } from "../service/save.service";
 
-export const saveHandler = new Composer();
+export const saveHandler = new Composer<NewContext>();
 
-saveHandler.callbackQuery(/^save_/, async (ctx) => {
-  const bookID = +ctx.callbackQuery.data.replace("save_", "");
-  const telegramID = ctx.from.id;
+saveHandler.callbackQuery(/^save_(.+)/, AuthGuard, async (ctx) => {
+  SaveService.save(ctx.user.ID, +ctx.match[1]);
+});
 
-  const verify: { success: boolean; user?: { ID: number } } = await axios.post(
-    `http://localhost/auth/verify/${telegramID}`
-  );
-
-  if (!verify.success) {
-    ctx.reply("registratsiyadan o'tilmagan");
-    return;
-  }
-
-  const userID = verify.user?.ID;
-
-  const saveRes = await axios.post(`http://localhost/save/`, {
-    userID,
-    bookID,
-  });
-  console.log(saveRes);
-
-  ctx.reply("saved");
+saveHandler.command("saves", AuthGuard, async (ctx) => {
+  const saves = await SaveService.getSaves(ctx.user.ID);
+  ctx.reply(saves.text, { reply_markup: saves.keyboard });
 });

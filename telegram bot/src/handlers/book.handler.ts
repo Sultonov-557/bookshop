@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Composer, InlineKeyboard } from "grammy";
 import { NewContext } from "../common/types/NewContext";
+import { AuthGuard } from "../guards/auth.guard";
+import { AdminGuard } from "../guards/admin.guard";
 
 export const bookHandler = new Composer<NewContext>();
 
@@ -17,7 +19,7 @@ bookHandler.command("books", async (ctx) => {
   ctx.reply("kitoblar:", { reply_markup: keyboard });
 });
 
-bookHandler.command("newbook", (ctx) => {
+bookHandler.command("newbook", AuthGuard, AdminGuard, (ctx) => {
   ctx.conversation.enter("newBook");
 });
 

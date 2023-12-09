@@ -12,7 +12,7 @@ import { SavedService } from './saved.service';
 import { CreateSavedDto } from './dto/create-saved.dto';
 import { UpdateSavedDto } from './dto/update-saved.dto';
 
-@Controller('saved')
+@Controller('save')
 export class SavedController {
   constructor(private readonly savedService: SavedService) {}
 
