@@ -22,7 +22,7 @@ export class SavedService {
     const user = await this.userRepo.findOneBy({ ID: userID });
 
     if (!user || !book) {
-      return { success: false  };
+      return { success: false };
     }
 
     const saveExist = await this.saveRepo.exist({
@@ -55,12 +55,29 @@ export class SavedService {
     return save;
   }
 
-  async remove(ID: number) {
+  async remove(deleteSavedDto: CreateSavedDto) {
+    const { bookID, userID } = deleteSavedDto;
+
+    const book = await this.bookRepo.findOneBy({ ID: bookID });
+    const user = await this.userRepo.findOneBy({ ID: userID });
+
+    if (!user || !book) {
+      return { success: false };
+    }
+
+    const saveExist = await this.saveRepo.exist({
+      where: { book, user },
+    });
+
+    if (!saveExist) {
+      return { success: false };
+    }
+
     const save = await this.saveRepo.findOne({
-      where: { ID },
-      relations: ['user', 'book'],
+      where: { user, book },
     });
 
     await this.saveRepo.delete(save);
+    return { success: true };
   }
 }

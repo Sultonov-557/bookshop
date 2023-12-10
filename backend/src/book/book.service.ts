@@ -41,12 +41,15 @@ export class BookService {
     return { success: true };
   }
 
-  findAll(page: number, limit: number) {
+  async findAll(page: number, limit: number, categoryID?: number) {
     const offset = (page - 1) * limit;
 
-    return this.bookRepo.find({
+    const category = await this.categoryRepo.findOneBy({ ID: categoryID });
+
+    return await this.bookRepo.find({
       skip: offset,
       take: limit,
+      where: { categorys: category },
     });
   }
 

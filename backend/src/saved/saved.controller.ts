@@ -31,8 +31,8 @@ export class SavedController {
     return this.savedService.findOne(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.savedService.remove(+id);
+  @Delete()
+  remove(@Body() deleteSavedDto: CreateSavedDto) {
+    return this.savedService.remove(deleteSavedDto);
   }
 }
