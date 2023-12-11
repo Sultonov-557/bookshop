@@ -42,6 +42,8 @@ export class BookService {
   }
 
   async findAll(page: number, limit: number, categoryID?: number) {
+    if (page <= 0) return;
+
     const offset = (page - 1) * limit;
 
     const category = await this.categoryRepo.findOneBy({ ID: categoryID });

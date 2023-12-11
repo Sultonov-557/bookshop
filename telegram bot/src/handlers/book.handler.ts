@@ -3,20 +3,16 @@ import { Composer, InlineKeyboard } from "grammy";
 import { NewContext } from "../common/types/NewContext";
 import { AuthGuard } from "../guards/auth.guard";
 import { AdminGuard } from "../guards/admin.guard";
+import { BookService } from "../service/book.service";
 
 export const bookHandler = new Composer<NewContext>();
 
 bookHandler.command("books", async (ctx) => {
-	const books = (await axios.get("http://localhost:80/book")).data;
-	const keyboard = new InlineKeyboard();
+	const message = await BookService.books(1);
 
-	for (let i of books) {
-		keyboard.text(i.name, `book_${i.ID}`);
-	}
+	if (!message.text) return;
 
-	keyboard.row().text("⬅️").text("1").text("➡️", "books_2");
-
-	ctx.reply("kitoblar:", { reply_markup: keyboard });
+	ctx.reply(message.text, { reply_markup: message.keyboard });
 });
 
 bookHandler.command("newbook", AuthGuard, AdminGuard, (ctx) => {
@@ -25,29 +21,18 @@ bookHandler.command("newbook", AuthGuard, AdminGuard, (ctx) => {
 
 bookHandler.callbackQuery(/^books_/, async (ctx) => {
 	const page = +ctx.callbackQuery.data.replace("books_", "");
-	const books = (await axios.get("http://localhost:80/book", { params: { page } })).data;
+	const message = await BookService.books(page);
 
-	const keyboard = new InlineKeyboard();
+	if (!message.text) return;
 
-	for (let i of books) {
-		keyboard.text(i.name, `book_${i.ID}`);
-	}
-
-	keyboard
-		.row()
-		.text("⬅️", `books_${page - 1}`)
-		.text(page + "")
-		.text("➡️", `books_${page + 1}`);
-
-	ctx.editMessageText("kitoblar:", { reply_markup: keyboard });
+	ctx.editMessageText(message.text, { reply_markup: message.keyboard });
 });
 
 bookHandler.callbackQuery(/^book_/, async (ctx) => {
 	const ID = +ctx.callbackQuery.data.replace("book_", "");
-	const book = (await axios.get(`http://localhost:80/book/${ID}`)).data;
-	const keyboard = new InlineKeyboard();
+	const message = await BookService.book(ID);
 
-	keyboard.text("save", `save_${ID}`).text("unsave", `unsave_${ID}`);
+	if (!message.text) return;
 
-	ctx.editMessageText(`nomi: ${book.name}\nyozuvchi: ${book.author}\nnarxi: ${book.price}`, { reply_markup: keyboard });
+	ctx.editMessageText(message.text, { reply_markup: message.keyboard });
 });
