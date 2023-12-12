@@ -19,20 +19,22 @@ bookHandler.command("newbook", AuthGuard, AdminGuard, (ctx) => {
 	ctx.conversation.enter("newBook");
 });
 
-bookHandler.callbackQuery(/^books_/, async (ctx) => {
-	const page = +ctx.callbackQuery.data.replace("books_", "");
-	const message = await BookService.books(page);
+bookHandler.on("callback_query:data", async (ctx) => {
+	if (ctx.callbackQueryData.type == "books") {
+		const page = +ctx.callbackQuery.data.replace("books_", "");
+		const message = await BookService.books(page);
 
-	if (!message.text) return;
+		if (!message.text) return;
 
-	ctx.editMessageText(message.text, { reply_markup: message.keyboard });
-});
+		ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+	}
 
-bookHandler.callbackQuery(/^book_/, async (ctx) => {
-	const ID = +ctx.callbackQuery.data.replace("book_", "");
-	const message = await BookService.book(ID);
+	if (ctx.callbackQueryData.type == "book") {
+		const ID = +ctx.callbackQuery.data.replace("book_", "");
+		const message = await BookService.book(ID);
 
-	if (!message.text) return;
+		if (!message.text) return;
 
-	ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+		ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+	}
 });
