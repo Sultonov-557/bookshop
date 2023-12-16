@@ -5,18 +5,20 @@ import { NewContext } from "../common/types/NewContext";
 export const commonHandler = new Composer<NewContext>();
 
 commonHandler.command("start", (ctx) => {
-	const message = CommonService.start();
+  const message = CommonService.start();
 
-	ctx.reply(message.text, { reply_markup: message.keyboard });
+  ctx.reply(message.text, { reply_markup: message.keyboard });
 });
 
 commonHandler.on("callback_query", (ctx, next) => {
-	if (ctx.callbackQueryData.type == "start") {
-		const message = CommonService.start();
+  if (ctx.callbackQueryData.type == "start") {
+    const message = CommonService.start();
 
-		message.keyboard.row().text("back", JSON.stringify(ctx));
+    message.keyboard
+      .row()
+      .text("back", JSON.stringify(ctx.callbackQueryData.from));
 
-		ctx.editMessageText(message.text, { reply_markup: message.keyboard });
-	}
-	next();
+    ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+  }
+  next();
 });

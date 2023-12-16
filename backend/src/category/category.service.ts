@@ -19,6 +19,7 @@ export class CategoryService {
 
   findAll(page: number, limit: number) {
     const offset = (page - 1) * limit;
+    if (page <= 0) return;
 
     return this.categoryRepo.find({
       skip: offset,

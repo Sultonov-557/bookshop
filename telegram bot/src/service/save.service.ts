@@ -2,43 +2,53 @@ import axios from "axios";
 import { InlineKeyboard } from "grammy";
 
 export const SaveService = {
-	async save(userID: number, bookID: number) {
-		const saveRes = await axios.post(`http://localhost:80/save/`, {
-			userID,
-			bookID,
-		});
+  async save(userID: number, bookID: number) {
+    console.log(userID, bookID);
+    const saveRes = await axios.post(`http://localhost:80/save/`, {
+      userID,
+      bookID,
+    });
 
-		if (saveRes.data.success) {
-			return "saved";
-		}
-	},
+    if (saveRes.data.success) {
+      return true;
+    } else {
+      return false;
+    }
+  },
 
-	async unsave(userID: number, bookID: number) {
-		const saveRes = await axios.delete(`http://localhost:80/save/`, {
-			data: {
-				userID,
-				bookID,
-			},
-		});
+  async unsave(userID: number, bookID: number) {
+    console.log(userID, bookID);
 
-		if (saveRes.data.success) {
-			return "deleted";
-		}
-	},
+    const saveRes = await axios.delete(`http://localhost:80/save/`, {
+      data: {
+        userID,
+        bookID,
+      },
+    });
 
-	async getSaves(userID: number) {
-		const savesReq = await axios.get("http://localhost:80/save", {
-			params: { userID },
-		});
+    if (saveRes.data.success) {
+      return true;
+    } else {
+      return false;
+    }
+  },
 
-		const keyboard = new InlineKeyboard();
+  async getSaves(userID: number) {
+    const savesReq = await axios.get("http://localhost:80/save", {
+      params: { userID },
+    });
 
-		const saves = savesReq.data;
+    const keyboard = new InlineKeyboard();
 
-		for (let save of saves) {
-			keyboard.text(save.book.name, `book_${save.book.ID}`);
-		}
+    const saves = savesReq.data;
 
-		return { text: "saqlangan kitoblar:", keyboard };
-	},
+    for (let save of saves) {
+      keyboard.text(
+        save.book.name,
+        JSON.stringify({ type: "book", args: [save.ID] })
+      );
+    }
+
+    return { text: "saqlangan kitoblar:", keyboard };
+  },
 };

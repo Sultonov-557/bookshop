@@ -13,29 +13,29 @@ import { ErrorHandler } from "./handlers/error.handler";
 const bot = new Bot<NewContext>(env.TOKEN);
 
 bot.use(
-	session({
-		initial() {
-			return {};
-		},
-	})
+  session({
+    initial() {
+      return {};
+    },
+  })
 );
 
 bot.use(conversations());
 
 bot.start({
-	drop_pending_updates: true,
-	onStart: () => {
-		console.log("started");
-	},
+  drop_pending_updates: true,
+  onStart: () => {
+    console.log("started");
+  },
 });
 
 bot.use(createConversation(NewBook, "newBook"));
 
 bot.use((ctx, next) => {
-	if (ctx.callbackQuery?.data) {
-		ctx.callbackQuery.data = JSON.parse(ctx.callbackQuery.data);
-	}
-	next();
+  if (ctx.callbackQuery?.data) {
+    ctx.callbackQueryData = JSON.parse(ctx.callbackQuery.data);
+  }
+  next();
 });
 
 bot.use(authHandler);

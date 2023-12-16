@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Composer, InlineKeyboard } from "grammy";
 import { NewContext } from "../common/types/NewContext";
 import { AuthGuard } from "../guards/auth.guard";
@@ -8,33 +7,33 @@ import { BookService } from "../service/book.service";
 export const bookHandler = new Composer<NewContext>();
 
 bookHandler.command("books", async (ctx) => {
-	const message = await BookService.books(1);
+  const message = await BookService.books(1);
 
-	if (!message.text) return;
+  if (!message.text) return;
 
-	ctx.reply(message.text, { reply_markup: message.keyboard });
+  ctx.reply(message.text, { reply_markup: message.keyboard });
 });
 
 bookHandler.command("newbook", AuthGuard, AdminGuard, (ctx) => {
-	ctx.conversation.enter("newBook");
+  ctx.conversation.enter("newBook");
 });
 
 bookHandler.on("callback_query:data", async (ctx) => {
-	if (ctx.callbackQueryData.type == "books") {
-		const page = +ctx.callbackQuery.data.replace("books_", "");
-		const message = await BookService.books(page);
+  if (ctx.callbackQueryData.type == "books") {
+    const page = +ctx.callbackQueryData.args[0];
+    const message = await BookService.books(page);
 
-		if (!message.text) return;
+    if (!message.text) return;
 
-		ctx.editMessageText(message.text, { reply_markup: message.keyboard });
-	}
+    ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+  }
 
-	if (ctx.callbackQueryData.type == "book") {
-		const ID = +ctx.callbackQuery.data.replace("book_", "");
-		const message = await BookService.book(ID);
+  if (ctx.callbackQueryData.type == "book") {
+    const ID = +ctx.callbackQueryData.args[0];
+    const message = await BookService.book(ID);
 
-		if (!message.text) return;
+    if (!message.text) return;
 
-		ctx.editMessageText(message.text, { reply_markup: message.keyboard });
-	}
+    ctx.editMessageText(message.text, { reply_markup: message.keyboard });
+  }
 });
