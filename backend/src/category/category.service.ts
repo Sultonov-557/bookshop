@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Repository } from 'typeorm';
 
+const cache = {};
+
 @Injectable()
 export class CategoryService {
   constructor(
@@ -21,11 +23,20 @@ export class CategoryService {
     const offset = (page - 1) * limit;
     if (page <= 0) return;
 
-    return this.categoryRepo.find({
-      skip: offset,
-      take: limit,
-      relations: ['books'],
-    });
+    let categories;
+    if (!cache[page]) {
+      categories = this.categoryRepo.find({
+        skip: offset,
+        take: limit,
+        relations: ['books'],
+      });
+
+      cache[page] = categories;
+    } else {
+      categories = cache[page];
+    }
+
+    return categories;
   }
 
   async findOne(ID: number) {

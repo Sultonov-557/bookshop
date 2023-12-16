@@ -14,4 +14,5 @@ export const DBConfig: TypeOrmModuleOptions = {
   database: env.DATABASE_NAME,
   entities: [User, Book, Category, Saved],
   synchronize: true,
+  cache: true,
 };
