@@ -14,10 +14,6 @@ commonHandler.on("callback_query", (ctx, next) => {
   if (ctx.callbackQueryData.type == "start") {
     const message = CommonService.start();
 
-    message.keyboard
-      .row()
-      .text("back", JSON.stringify(ctx.callbackQueryData.from));
-
     ctx.editMessageText(message.text, { reply_markup: message.keyboard });
   }
   next();

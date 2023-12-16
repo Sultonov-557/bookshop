@@ -1,9 +1,10 @@
 import axios from "axios";
 import { InlineKeyboard } from "grammy";
+import { Menus } from "../menus";
 
 export const CategoryService = {
   async categories(page: number) {
-    const categories = (
+    const categories: any[] = (
       await axios.get("http://localhost:80/category", { params: { page } })
     ).data;
 
@@ -11,22 +12,12 @@ export const CategoryService = {
       return {};
     }
 
-    const keyboard = new InlineKeyboard();
-
-    for (let i of categories) {
-      keyboard.text(
-        i.name,
-        JSON.stringify({ type: "category", args: [i.ID, 1] })
-      );
-    }
-
-    keyboard
-      .row()
-      .text("⬅️", JSON.stringify({ type: "categories", args: [page - 1] }))
-      .text(page + "")
-      .text("➡️", JSON.stringify({ type: "categories", args: [page + 1] }));
-
-    return { text: "categorylar", keyboard, success: true };
+    return {
+      text: "categorylar",
+      categories,
+      keyboard: Menus.categories,
+      success: true,
+    };
   },
 
   async category(ID: number, page: number) {
@@ -44,18 +35,6 @@ export const CategoryService = {
       return {};
     }
 
-    const keyboard = new InlineKeyboard();
-
-    for (let i of books) {
-      keyboard.text(i.name, JSON.stringify({ type: "book", args: [i.ID] }));
-    }
-
-    keyboard
-      .row()
-      .text("⬅️", JSON.stringify({ type: "category", args: [ID, page - 1] }))
-      .text(page + "")
-      .text("➡️", JSON.stringify({ type: "category", args: [ID, page + 1] }));
-
-    return { text: "kitoblar:", keyboard };
+    return { text: "kitoblar:", books, keyboard: "TODO" };
   },
 };

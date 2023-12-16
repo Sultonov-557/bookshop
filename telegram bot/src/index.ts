@@ -9,6 +9,7 @@ import { NewBook } from "./conversations/newBook.conversation";
 import { saveHandler } from "./handlers/save.handler";
 import { authHandler } from "./handlers/auth.handler";
 import { ErrorHandler } from "./handlers/error.handler";
+import { Menus, MenusArray } from "./menus";
 
 const bot = new Bot<NewContext>(env.TOKEN);
 
@@ -21,6 +22,10 @@ bot.use(
 );
 
 bot.use(conversations());
+
+for (let menu of MenusArray) {
+  bot.use(menu);
+}
 
 bot.start({
   drop_pending_updates: true,
