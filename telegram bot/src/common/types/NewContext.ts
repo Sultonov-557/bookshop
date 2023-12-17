@@ -1,7 +1,8 @@
 import { type ConversationFlavor } from "@grammyjs/conversations";
-import { Context } from "grammy";
+import { Context, SessionFlavor } from "grammy";
 
 export type NewContext = Context &
+	SessionFlavor<{ page: number; categoryID: number }> &
 	ConversationFlavor & {
 		user: {
 			ID: number;
