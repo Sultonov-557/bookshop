@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Backgammon</title>
+  <style>
+    #board {
+      width: 600px;
+      height: 400px;
+      border: 1px solid black;
+      display: flex;
+    }
+
+    .point {
+      width: 50px;
+      height: 100%;
+      border: 1px solid black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: beige;
+    }
+
+    .checker {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: black;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="board">
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+    <div class="point"></div>
+  </div>
+
+  <script>
+    const points = document.querySelectorAll('.point');
+
+    // Function to initialize the board with checkers
+    function initializeBoard() {
+      points.forEach((point, index) => {
+        if (index === 1 || index === 6) {
+          point.innerHTML = '<div class="checker"></div>';
+        } else if (index === 12 || index === 17) {
+          point.innerHTML = '<div class="checker"></div><div class="checker"></div><div class="checker"></div>';
+        } else if (index === 19 || index === 24) {
+          point.innerHTML = '<div class="checker"></div>';
+        }
+      });
+    }
+
+    // Call the initializeBoard function to set up the initial state
+    initializeBoard();
+  </script>
+</body>
+</html>
